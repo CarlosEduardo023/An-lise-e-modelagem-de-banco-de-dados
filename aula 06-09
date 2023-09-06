@@ -1,0 +1,42 @@
+CREATE TABLE [dbo].[nota](
+    [chnota] [int] IDENTITY(1,1) NOT NULL,
+    [chaluno] [int] NULL,
+    [n1] [decimal](10, 2) NULL,
+    [n2] [decimal](10, 2) NULL,
+    [n3] [decimal](10, 2) NULL
+) ON [PRIMARY]
+GO
+CREATE TABLE [dbo].[aluno](
+    [chaluno] [int] IDENTITY(1,1) NOT NULL,
+    [nome] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+insert into aluno (nome)
+select 'ANA' union select 'Jose' union select 'Bete'
+go
+insert into nota (chaluno, n1,n2,n3)
+select 1, 10,2, 0 union
+select 2, 4,4,4    union
+select 3, 5, 5,8
+go
+
+---------------------------------------
+
+alter procedure getresultado(@idaluno int)
+as begin
+	declare @media int
+
+	set @media = (select (n1+n2)/2 from nota where chaluno=@idaluno)
+
+	if @media < 6 select 'reprovado'
+	if @media >= 6 select 'aprovado'
+end
+
+-------------------------------------------
+
+select * from nota
+exec getresultado 2
+
+----------------------------
+
+delete nota where chnota > 3
